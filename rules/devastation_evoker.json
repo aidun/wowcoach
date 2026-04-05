@@ -1,0 +1,147 @@
+{
+  "class": "Evoker",
+  "spec": "Devastation",
+  "version": "12.0.1 (Midnight Season 1)",
+  "notes": "Devastation Evoker: manage Essence (max 5), use Empowered spells (Fire Breath, Eternity Surge), align Dragonrage burst window.",
+  "spells": {
+    "Disintegrate": {
+      "id": 356995,
+      "gcd": true,
+      "cast_time": 3.0,
+      "off_gcd": false,
+      "description": "Primary filler channel (3s). Generates Essence over duration. Highest priority filler."
+    },
+    "Pyre": {
+      "id": 357211,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "description": "Essence spender (3 Essence). Use in burst window or at 5 Essence to prevent cap."
+    },
+    "Living Flame": {
+      "id": 361469,
+      "gcd": true,
+      "cast_time": 1.7,
+      "off_gcd": false,
+      "description": "Secondary filler. Deals fire or heals based on target."
+    },
+    "Fire Breath": {
+      "id": 357208,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "cooldown": 20,
+      "description": "Empowered spell (1–4 stages). Higher stage = more damage and DoT duration."
+    },
+    "Eternity Surge": {
+      "id": 359073,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "cooldown": 30,
+      "description": "Empowered spell. Highest priority damage CD. Deals massive Arcane damage."
+    },
+    "Dragonrage": {
+      "id": 375087,
+      "gcd": false,
+      "cast_time": 0,
+      "off_gcd": true,
+      "cooldown": 120,
+      "description": "Primary DPS CD. Empowers all spells to max stage instantly during duration."
+    },
+    "Shattering Star": {
+      "id": 370452,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "cooldown": 20,
+      "description": "Debuffs target, causes next Disintegrate to deal massive bonus damage."
+    },
+    "Hover": {
+      "id": 358267,
+      "gcd": false,
+      "cast_time": 0,
+      "off_gcd": true,
+      "cooldown": 35,
+      "description": "Movement ability. Doesn't cancel casts."
+    }
+  },
+  "buffs": {
+    "Essence Burst": {
+      "id": 359618,
+      "description": "Proc: next Pyre or Disintegrate costs 0 Essence. Up to 2 charges.",
+      "max_stacks": 2,
+      "expires_action": "Spend on Pyre or Disintegrate immediately"
+    },
+    "Iridescence": {
+      "id": 370867,
+      "description": "After Empowered spell: 20% bonus to next 2 spells of matching school.",
+      "max_stacks": 2
+    }
+  },
+  "spec_ids": {
+    "primary_dps_cd": 375087,
+    "secondary_dps_cd": 359073
+  },
+  "off_gcd_spells": [375087, 358267],
+  "major_cooldowns": [
+    {
+      "spell_id": 375087,
+      "name": "Dragonrage",
+      "cooldown": 120,
+      "priority": 1,
+      "use_condition": "Use on cooldown. Align with Eternity Surge and Fire Breath."
+    },
+    {
+      "spell_id": 359073,
+      "name": "Eternity Surge",
+      "cooldown": 30,
+      "priority": 2,
+      "use_condition": "On cooldown. Use max stage during Dragonrage."
+    },
+    {
+      "spell_id": 357208,
+      "name": "Fire Breath",
+      "cooldown": 20,
+      "priority": 3,
+      "use_condition": "On cooldown. Use max stage during Dragonrage."
+    }
+  ],
+  "talent_builds": {
+    "devastation_evoker": {
+      "name": "Devastation Evoker",
+      "description": "Standard Devastation build. Align Dragonrage with Eternity Surge.",
+      "opener": [
+        {"step": 1, "spell_id": 375087, "name": "Dragonrage",      "note": "Primary CD on pull"},
+        {"step": 2, "spell_id": 359073, "name": "Eternity Surge",  "note": "Max stage in Dragonrage"},
+        {"step": 3, "spell_id": 357208, "name": "Fire Breath",     "note": "Max stage in Dragonrage"},
+        {"step": 4, "spell_id": 356995, "name": "Disintegrate",    "note": "Filler channel"},
+        {"step": 5, "spell_id": 370452, "name": "Shattering Star", "note": "Before next Disintegrate"}
+      ],
+      "priority": [
+        {"priority": 1, "action": "Dragonrage on cooldown", "spell_id": 375087},
+        {"priority": 2, "action": "Eternity Surge on cooldown", "spell_id": 359073},
+        {"priority": 3, "action": "Fire Breath on cooldown", "spell_id": 357208},
+        {"priority": 4, "action": "Shattering Star on cooldown", "spell_id": 370452},
+        {"priority": 5, "action": "Disintegrate as filler", "spell_id": 356995},
+        {"priority": 6, "action": "Pyre at 5 Essence or Essence Burst", "spell_id": 357211},
+        {"priority": 7, "action": "Living Flame as last resort filler", "spell_id": 361469}
+      ]
+    }
+  },
+  "error_rules": [
+    {
+      "id": "dragonrage_delayed",
+      "severity": "major",
+      "spell_id": 375087,
+      "condition": "Dragonrage not cast within first 8 seconds of encounter",
+      "message": "Dragonrage zu spät! Primary DPS-CD sofort beim Pull.",
+      "explanation": "Dragonrage ist der wichtigste Cooldown für Devastation Evoker."
+    }
+  ],
+  "gcd": {
+    "base_ms": 1500,
+    "minimum_ms": 750,
+    "waste_threshold_ms": 400
+  }
+}

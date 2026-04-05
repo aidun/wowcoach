@@ -1,0 +1,177 @@
+{
+  "class": "Mage",
+  "spec": "Arcane",
+  "version": "12.0.1 (Midnight Season 1)",
+  "notes": "Arcane Mage: manage Arcane Charges (max 4), burn mana with Arcane Surge + Touch of the Magi window, conserve with Evocation.",
+  "spells": {
+    "Arcane Blast": {
+      "id": 30451,
+      "gcd": true,
+      "cast_time": 2.25,
+      "off_gcd": false,
+      "description": "Primary filler. Generates 1 Arcane Charge per cast (max 4). Damage and mana cost scale with charges."
+    },
+    "Arcane Missiles": {
+      "id": 5143,
+      "gcd": true,
+      "cast_time": 2.0,
+      "off_gcd": false,
+      "description": "Only cast with Clearcasting proc. Generates 1 Arcane Charge. Doesn't cost mana with Clearcasting."
+    },
+    "Arcane Barrage": {
+      "id": 44781,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "description": "Dumps all Arcane Charges for AoE damage. Resets to 0 charges. Use to conserve mana or in AoE."
+    },
+    "Arcane Surge": {
+      "id": 365350,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "cooldown": 90,
+      "description": "Primary DPS cooldown. Requires 4 Arcane Charges. Empowers next spell massively. Use with Touch of the Magi window."
+    },
+    "Touch of the Magi": {
+      "id": 321507,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "cooldown": 45,
+      "description": "Places debuff that accumulates 25% of Arcane damage dealt, then detonates. Use before burn phase."
+    },
+    "Radiant Spark": {
+      "id": 376103,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "cooldown": 30,
+      "description": "Talent CD: creates vulnerability stack on target for subsequent casts."
+    },
+    "Evocation": {
+      "id": 12051,
+      "gcd": false,
+      "cast_time": 0,
+      "off_gcd": true,
+      "cooldown": 90,
+      "description": "Restores 100% mana over 6s. Use when mana drops below ~30% in burn phase."
+    },
+    "Presence of Mind": {
+      "id": 12043,
+      "gcd": false,
+      "cast_time": 0,
+      "off_gcd": true,
+      "cooldown": 60,
+      "description": "Next Arcane Blast is instant. Pairs with Arcane Surge opener."
+    },
+    "Arcane Intellect": {
+      "id": 1459,
+      "gcd": true,
+      "cast_time": 0,
+      "off_gcd": false,
+      "cooldown": 0,
+      "description": "Group intellect buff."
+    },
+    "Shimmer": {
+      "id": 212653,
+      "gcd": false,
+      "cast_time": 0,
+      "off_gcd": true,
+      "cooldown": 20,
+      "description": "Blink without interrupt."
+    },
+    "Time Warp": {
+      "id": 80353,
+      "gcd": false,
+      "cast_time": 0,
+      "off_gcd": true,
+      "cooldown": 300,
+      "description": "Bloodlust. Use at start of burn phase."
+    }
+  },
+  "buffs": {
+    "Clearcasting": {
+      "id": 263725,
+      "description": "Proc: next Arcane Missiles is free and deals bonus damage. ~10% chance per Arcane Blast.",
+      "max_stacks": 1,
+      "expires_action": "Cast Arcane Missiles immediately"
+    },
+    "Arcane Charge": {
+      "id": 36032,
+      "description": "Stacks to 4. Increases Arcane Blast/Barrage damage by 60% and mana cost by 100% per stack.",
+      "max_stacks": 4
+    }
+  },
+  "spec_ids": {
+    "primary_dps_cd": 365350,
+    "secondary_dps_cd": 321507
+  },
+  "off_gcd_spells": [12051, 12043, 212653, 80353],
+  "major_cooldowns": [
+    {
+      "spell_id": 365350,
+      "name": "Arcane Surge",
+      "cooldown": 90,
+      "priority": 1,
+      "use_condition": "Use at 4 Arcane Charges after Touch of the Magi debuff applied."
+    },
+    {
+      "spell_id": 321507,
+      "name": "Touch of the Magi",
+      "cooldown": 45,
+      "priority": 2,
+      "use_condition": "Use before Arcane Surge to maximize detonation damage."
+    },
+    {
+      "spell_id": 376103,
+      "name": "Radiant Spark",
+      "cooldown": 30,
+      "priority": 3,
+      "use_condition": "On cooldown, align with burn windows."
+    }
+  ],
+  "talent_builds": {
+    "arcane_mage": {
+      "name": "Arcane Mage",
+      "description": "Standard Arcane build. Manage charges and mana for burn windows.",
+      "opener": [
+        {"step": 1, "spell_id": 321507, "name": "Touch of the Magi",  "note": "Apply debuff first"},
+        {"step": 2, "spell_id": 365350, "name": "Arcane Surge",        "note": "Burn phase"},
+        {"step": 3, "spell_id": 30451,  "name": "Arcane Blast",        "note": "Build to 4 charges"},
+        {"step": 4, "spell_id": 5143,   "name": "Arcane Missiles",     "note": "On Clearcasting proc"},
+        {"step": 5, "spell_id": 44781,  "name": "Arcane Barrage",      "note": "Dump charges / conserve"}
+      ],
+      "priority": [
+        {"priority": 1, "action": "Arcane Surge when ready (4 charges)", "spell_id": 365350},
+        {"priority": 2, "action": "Touch of the Magi on cooldown", "spell_id": 321507},
+        {"priority": 3, "action": "Arcane Missiles on Clearcasting", "spell_id": 5143},
+        {"priority": 4, "action": "Arcane Blast to 4 charges", "spell_id": 30451},
+        {"priority": 5, "action": "Arcane Barrage to dump/conserve", "spell_id": 44781}
+      ]
+    }
+  },
+  "error_rules": [
+    {
+      "id": "arcane_surge_delayed",
+      "severity": "major",
+      "spell_id": 365350,
+      "condition": "Arcane Surge not cast within first 8 seconds of encounter",
+      "message": "Arcane Surge zu spät! Primary DPS-CD sofort beim Pull.",
+      "explanation": "Arcane Surge ist der wichtigste Cooldown. Frühzeitiger Einsatz maximiert Nutzungsanzahl."
+    },
+    {
+      "id": "clearcasting_overwritten",
+      "severity": "moderate",
+      "buff_id": 263725,
+      "condition": "Clearcasting overwritten without casting Arcane Missiles",
+      "message": "Clearcasting verfallen! Sofort Arcane Missiles casten bei Proc.",
+      "explanation": "Clearcasting proc gibt kostenloses Arcane Missiles. Ablaufen lassen = DPS-Verlust."
+    }
+  ],
+  "gcd": {
+    "base_ms": 1500,
+    "minimum_ms": 750,
+    "waste_threshold_ms": 400
+  }
+}
