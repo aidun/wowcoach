@@ -1,0 +1,279 @@
+:root {
+  --bg: #08111d;
+  --bg-2: #0e1725;
+  --surface: rgba(16, 24, 39, 0.82);
+  --surface-2: rgba(18, 30, 48, 0.92);
+  --line: rgba(148, 163, 184, 0.18);
+  --text: #eef4fb;
+  --muted: #95a6bd;
+  --accent: #d7ae4f;
+  --accent-2: #5ec3ff;
+  --danger: #ff7849;
+  --good: #78e5b0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(94, 195, 255, 0.16), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(215, 174, 79, 0.18), transparent 24%),
+    linear-gradient(180deg, #07101a, #0b1320 54%, #08111d);
+  color: var(--text);
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  border-right: 1px solid var(--line);
+  padding: 32px 24px;
+  background: linear-gradient(180deg, rgba(9, 15, 24, 0.92), rgba(10, 18, 30, 0.86));
+  backdrop-filter: blur(14px);
+}
+
+.workspace {
+  padding: 32px;
+}
+
+.brand h1,
+.hero h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.brand h1 {
+  font-size: 2.4rem;
+  margin: 8px 0 12px;
+}
+
+.hero h2 {
+  font-size: 3rem;
+  margin: 8px 0 10px;
+}
+
+.eyebrow {
+  display: inline-block;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+}
+
+.panel,
+.hero,
+.score,
+.finding,
+.section,
+.timeline-item {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 22px;
+  backdrop-filter: blur(12px);
+}
+
+.panel {
+  padding: 18px;
+  margin-top: 28px;
+}
+
+.summary,
+.brand p,
+.hero p,
+.section p,
+.finding p,
+.timeline-item,
+.metric-line {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.path-row,
+.actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.actions {
+  margin-top: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+input,
+select,
+button {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(8, 14, 24, 0.88);
+  color: var(--text);
+  padding: 12px 14px;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), #b7822c);
+  color: #11161e;
+  font-weight: 700;
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+button.secondary {
+  background: rgba(13, 21, 33, 0.94);
+  color: var(--text);
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+.hero {
+  padding: 28px;
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr;
+  gap: 16px;
+  align-items: end;
+  background:
+    linear-gradient(180deg, rgba(13, 21, 33, 0.84), rgba(13, 21, 33, 0.94)),
+    radial-gradient(circle at top right, rgba(215, 174, 79, 0.22), transparent 30%);
+}
+
+.hero-accent {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
+.hero-accent span {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--accent-2);
+}
+
+.report {
+  margin-top: 26px;
+  min-height: calc(100vh - 190px);
+}
+
+.report.empty {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--line);
+  border-radius: 24px;
+}
+
+.empty-state {
+  max-width: 420px;
+  text-align: center;
+}
+
+.score-grid,
+.section-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.score-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin-bottom: 22px;
+}
+
+.score {
+  padding: 18px;
+  background: var(--surface-2);
+}
+
+.score-value {
+  margin-top: 10px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.score small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+.section-grid {
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+.cluster {
+  display: grid;
+  gap: 16px;
+}
+
+.finding,
+.section,
+.timeline-item {
+  padding: 20px;
+}
+
+.finding.major {
+  border-left: 4px solid var(--danger);
+}
+
+.finding.moderate {
+  border-left: 4px solid var(--accent);
+}
+
+.finding.minor,
+.finding.info {
+  border-left: 4px solid var(--accent-2);
+}
+
+.timeline {
+  display: grid;
+  gap: 12px;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.timestamp {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+@media (max-width: 1100px) {
+  #app {
+    grid-template-columns: 1fr;
+  }
+
+  .section-grid,
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}

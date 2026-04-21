@@ -1,89 +1,142 @@
 # WoW Coach
 
-Real-time World of Warcraft combat log analyzer with an always-on-top overlay. Reads your combat log as you play and gives you live rotation hints, opener scoring, GCD efficiency tracking, and post-fight error summaries.
+Offline-first desktop analyzer for World of Warcraft combat logs, with
+Windows as the primary target and macOS support built in.
+
+This repository is a Go/Wails desktop app focused on a wowanalyzer-style
+post-fight workflow:
+
+- import a `WoWCombatLog.txt`
+- detect raid and Mythic+ fights
+- choose a fight
+- choose a player
+- choose a spec
+- render a structured report inside the desktop app
 
 ## Supported Specs
 
-| Class | Spec | Talents |
-|-------|------|---------|
-| Mage | Frost | Frostfire, Spellslinger |
-| Mage | Arcane | — |
-| Evoker | Devastation | — |
-| Evoker | Augmentation | — |
+- Frost Mage
+- Arcane Mage
+- Devastation Evoker
+- Augmentation Evoker
+- Unholy Death Knight
+- Feral Druid
 
-Rules are defined in `rules/*.json` and cover the **Midnight (12.x / Season 1)** patch.
+## App Stack
 
-## Features
+- Go `1.24`
+- [Wails v2](https://wails.io/) for the desktop shell on Windows and macOS
+- Embedded static frontend in `frontend/dist`
 
-- **Live hints** — fires alerts when you break rotation rules (e.g. Flurry without Brain Freeze)
-- **Opener scoring** — tracks your first 10 seconds against the ideal sequence
-- **GCD efficiency** — measures gaps between casts and shows the worst offenders
-- **Rotation errors** — timestamped log of every mistake with severity
-- **Cooldown alerts** — periodic reminders if a major cooldown is sitting unused
-- **Segment analysis** — replay any past encounter from your log and get a full breakdown
-- **Live / Replay / Summary modes** — switch between watching live and analyzing old pulls
+## Project Layout
 
-## Requirements
+- `main.go`, `app.go`: Wails entrypoint and desktop API surface
+- `internal/logparser`: WoW combat log parser
+- `internal/segments`: fight segmentation and actor detection
+- `internal/analyzer`: generic fight analysis engine
+- `internal/specs`: spec catalog, detection, thresholds and findings
+- `internal/report`: HTML export helpers
+- `frontend/dist`: embedded app UI
+- `testdata`: sample combat logs used by the Go tests
 
-- Python 3.12+
-- `tkinter` (included in standard CPython on Windows)
+## Backend API
 
-```
-pip install -r requirements.txt
-```
+The desktop app exposes these methods to the frontend:
 
-## Usage
+- `OpenLog(path)`
+- `ListFights()`
+- `ListActors(fightID)`
+- `AnalyzeFight(fightID, actorID, specID)`
+- `ExportReport(fightID, actorID, specID, format)`
 
-```
-# Live mode (watches the current WoWCombatLog.txt)
-python main.py --player YourCharacterName --talent frostfire
+There is also `SelectLogFile()` for a native file dialog in Wails.
 
-# Replay a log file
-python main.py --player YourCharacterName --replay --log "C:/path/to/WoWCombatLog.txt"
+## Development
 
-# Pick spec explicitly
-python main.py --player YourCharacterName --spec frost_mage
-```
+Install Go and Node. Wails CLI is optional for `go test`, but recommended for
+desktop development on both Windows and macOS.
 
-### Arguments
-
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `--player` | *(prompt on start)* | Character name (realm suffix optional) |
-| `--talent` | `frostfire` | `frostfire` or `spellslinger` (Frost Mage only) |
-| `--spec` | auto | `frost_mage`, `arcane_mage`, `devastation_evoker`, `augmentation_evoker` |
-| `--log` | auto-detect | Path to WoWCombatLog.txt |
-| `--replay` | off | Replay mode instead of live |
-| `--replay-speed` | `5.0` | Playback speed multiplier (0 = instant) |
-
-If `--player` is omitted, a dialog will prompt you on startup.
-
-## Overlay Controls
-
-- **Drag** the title bar to reposition
-- **⚙ Settings** — change player, spec, log path, and replay speed at runtime
-- **Mode switcher** — toggle between 🔴 Live, ⏵ Replay, and 📊 Summary
-- **Ctrl+Q** or close button to quit
-
-## Running Tests
-
-```
-pytest
-# or
-run_tests.bat
+```bash
+go mod download
+go test ./...
 ```
 
-144 tests covering the parser, engine, log scanner, and all four specs.
+For direct app builds outside the helper scripts, Wails requires build tags:
 
-## Log File Location
-
-WoW writes its combat log to:
-```
-C:\Program Files (x86)\World of Warcraft\_retail_\Logs\WoWCombatLog.txt
+```bash
+go build -tags production .
 ```
 
-Enable **Advanced Combat Logging** in WoW under System → Network for full event coverage.
+If you want to run the desktop app with the Wails tooling:
 
----
+```bash
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
+wails dev
+```
 
-> See [DISCLAIMER.md](DISCLAIMER.md) for important notes about this project.
+## Build Scripts
+
+The repository includes simple platform-specific build scripts. Each script
+runs `go test ./...` first and only builds if the test suite passes.
+
+macOS:
+
+```bash
+./scripts/build-macos.sh
+./scripts/build-macos.sh arm64
+./scripts/build-macos.sh amd64
+```
+
+Windows:
+
+```powershell
+.\scripts\build-windows.ps1
+.\scripts\build-windows.ps1 amd64
+.\scripts\build-windows.ps1 arm64
+```
+
+Windows wrapper:
+
+```bat
+scripts\build-windows.bat
+```
+
+Artifacts are written to:
+
+- `build/macos`
+- `build/windows`
+
+## Current Scope
+
+Implemented in the rewrite:
+
+- Retail-style log parsing with common event types
+- Raid and Mythic+ fight detection
+- Actor detection inside the selected fight
+- Manual spec selection with spell-based spec suggestions
+- Structured report with summary, scores, findings, uptime, cooldowns and timeline
+- HTML export of the generated report
+
+Not yet at full wowanalyzer parity:
+
+- spec logic is substantial but still heuristic
+- no Warcraft Logs import
+- no live overlay, no live watcher, no replay mode
+
+## Tests
+
+The new Go implementation is covered with package-level tests for:
+
+- parser behavior
+- fight segmentation
+- actor detection
+- analysis result shape
+
+Run:
+
+```bash
+go test ./...
+```
+
+Regression fixtures are based on standard `WoWCombatLog.txt` style logs under
+`testdata/`.

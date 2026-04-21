@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WoW Coach</title>
+    <link rel="stylesheet" href="./assets/app.css" />
+  </head>
+  <body>
+    <div id="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="eyebrow">WoW Coach</span>
+          <h1>Offline fight intelligence for Retail logs.</h1>
+          <p>Load a combat log, isolate a fight, choose an actor, then read a structured report instead of a live overlay.</p>
+        </div>
+
+        <section class="panel import-panel">
+          <label for="log-path">Combat Log Path</label>
+          <div class="path-row">
+            <input id="log-path" type="text" placeholder="Path to WoWCombatLog.txt" />
+            <button id="select-log" class="secondary">Browse</button>
+          </div>
+          <button id="open-log">Open Log</button>
+          <div id="import-summary" class="summary muted">No log imported.</div>
+        </section>
+
+        <section class="panel selectors">
+          <div class="field">
+            <label for="fight-select">Fight</label>
+            <select id="fight-select"></select>
+          </div>
+          <div class="field">
+            <label for="actor-select">Actor</label>
+            <select id="actor-select"></select>
+          </div>
+          <div class="field">
+            <label for="spec-select">Spec</label>
+            <select id="spec-select"></select>
+          </div>
+          <div class="actions">
+            <button id="analyze">Analyze Fight</button>
+            <button id="export-report" class="secondary">Export HTML</button>
+          </div>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <section class="hero">
+          <div>
+            <span class="eyebrow">Report Surface</span>
+            <h2 id="hero-title">No report loaded</h2>
+            <p id="hero-subtitle">Choose a log, then a fight, actor and spec to generate an in-app analysis report.</p>
+          </div>
+          <div class="hero-accent">
+            <span>Raid and Mythic+</span>
+            <span>6 Specs</span>
+            <span>Offline</span>
+          </div>
+        </section>
+
+        <section id="report" class="report empty">
+          <div class="empty-state">
+            <h3>Fight reports render here.</h3>
+            <p>The first screen is intentionally sparse. The report becomes the main surface once a fight is analyzed.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
